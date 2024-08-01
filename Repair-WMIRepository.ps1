@@ -11,16 +11,16 @@ function Repair-WMIRepository {
     process {
         try {
             if ($PSCmdlet.ShouldProcess("WMI Repository", "Repair")) {
-                Write-Host "Stopping WMI-related services..." -ForegroundColor Yellow
+                [console]::writeline("Stopping WMI-related services...")
                 Stop-Service -Name Winmgmt -Force
                 
-                Write-Host "Salvaging WMI repository..." -ForegroundColor Yellow
+                [console]::writeline("Salvaging WMI repository...")
                 winmgmt /salvagerepository %windir%\System32\wbem
                 
-                Write-Host "Verifying WMI repository..." -ForegroundColor Yellow
+                [console]::writeline("Verifying WMI repository...")
                 winmgmt /verifyrepository
                 
-                Write-Host "Rebuilding WMI repository..." -ForegroundColor Yellow
+                [console]::writeline("Rebuilding WMI repository...")
                 Get-ChildItem $env:SystemRoot\System32\wbem -Filter *.mof -Recurse | ForEach-Object {
                     mofcomp $_.FullName
                 }
@@ -29,10 +29,10 @@ function Repair-WMIRepository {
                     regsvr32 /s $_.FullName
                 }
                 
-                Write-Host "Starting WMI service..." -ForegroundColor Yellow
+                [console]::writeline("Starting WMI service...")
                 Start-Service -Name Winmgmt
                 
-                Write-Host "WMI repository repair completed successfully." -ForegroundColor Green
+                [console]::writeline("WMI repository repair completed successfully.")
             }
         }
         catch {
