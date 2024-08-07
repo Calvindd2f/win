@@ -54,7 +54,6 @@ function cleaner() {
 	Stop-Service -Name "wuauserv" -Force > $Null
 	Stop-Service -Name "cryptsvc" -Force > $Null
 
-
 	[console]::writeline("Cleaning up leftovers")
 
 	$foldersToRemove = @(
@@ -86,15 +85,15 @@ function cleaner() {
 
 	Get-ChildItem -Path "$env:SystemRoot" -Filter *.log -File -Recurse -Force | Remove-Item -Recurse -Force >$Null
 
-	Write-Host "Cleaning up %TEMP%"
+	[console]::writeline("Cleaning up %TEMP%")
 	Get-ChildItem -Path "$env:TEMP" -Exclude "AME" | Remove-Item -Recurse -Force
 
 	# Just in case
 	Start-ScheduledTask -TaskPath "\Microsoft\Windows\DiskCleanup\" -TaskName "SilentCleanup"
 
-	# Write-Host "Cleaning up Retail Demo Content"
+	# [console]::writeline("Cleaning up Retail Demo Content")
 	# Start-ScheduledTask -TaskPath "\Microsoft\Windows\RetailDemo\" -TaskName "CleanupOfflineContent"
 
-	# Write-Host "Cleaning up the WinSxS Components"
+	# [console]::writeline("Cleaning up the WinSxS Components")
 	# DISM /Online /Cleanup-Image /StartComponentCleanup
 }
